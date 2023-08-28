@@ -77,9 +77,11 @@ const weatherMap = {
 
             ]);
 
-            var options = {};
+            const options = {
+                backgroundColor: "rgb(62, 138, 237)",
+            };
 
-            var chart = new google.visualization.GeoChart(document.getElementById('worldMap'));
+            const chart = new google.visualization.GeoChart(document.getElementById('worldMap'));
 
             chart.draw(data, options);
         };
