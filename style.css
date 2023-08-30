@@ -3,3 +3,32 @@
     height: 100vh;
     width: 1300px;
 }
+
+body{
+    position: relative;
+}
+
+.search > #searchBar{
+    position: absolute;
+    width: 400px;
+    height: 20px;
+    background-color: lightgrey;
+    right: 180px;
+    top: 60px;
+
+
+}
+
+.search > #searchButton{
+    position: absolute;
+    right: 120px;
+    top: 65px;
+    width: 50px;
+    height: 19px;
+    background-color: blueviolet;
+    font-size: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: space-around;
+    color: white;
+}
