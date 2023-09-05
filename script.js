@@ -30,16 +30,20 @@ const weatherMap = {
        return `${this.baseURL}/current.json?key=${this.apiKey}&q=${this.location}&qi=no`;
     },
 
-
     weatherForecast(){
-      return `${this.baseURL}/forecast.json?key=${this.apiKey}&q=${this.location}&days=1&aqi=no&alerts=no`;
+        return `${this.baseURL}/forecast.json?key=${this.apiKey}&q=${this.location}&days=7&aqi=no&alerts=no`;
     },
 
     detectCurrentLocation(){
         return `${this.baseURL2}/ipinfo?&apiKey=${this.apiKey2}`;
     },
 
-
+    
+    async get7dayForecast(){
+        const response = await fetch(this.weatherForecast());
+        const result = await response.json();
+        return result.forecast.forecastday;
+    },
 
     //stores coordinates of location in array "coordinates"
     async getLocation(){
@@ -53,13 +57,12 @@ const weatherMap = {
 
     //pushes user's current location as lat. and lon. to array
     async getUserLocation(){
-        
+
         locationCoordinates = [];
         const response = await fetch(this.detectCurrentLocation());
         const result = await response.json();
         this.locationCoordinates.push(result.location.latitude);
         this.locationCoordinates.push(result.location.longitude);
-        console.log(this.locationCoordinates);
     },
 
     //stores current atmospheric conditions in arrays
@@ -80,7 +83,7 @@ const weatherMap = {
         this.currentCloudCover.push(result.current.cloud);
         this.currentAtmPressure.push(result.current.pressure_mb);
         this.tempFeelsLike.push(result.current.feelslike_c);
-        console.log(this.temperatureNow);
+        console.log(this.result);
     },
 
 
@@ -108,7 +111,7 @@ const weatherMap = {
 
             chart.draw(data, options);
         };
-        this.getUserLocation();
+         this.get7dayForecast();
     },
 };
 weatherMap.init();
