@@ -13,7 +13,7 @@ const weatherMap = {
 
 
 
-    location           :"cheshunt",
+    location           :"",
     coordinates        :[],
     currentCondition   :[],
     temperatureNow     :[],
@@ -36,6 +36,10 @@ const weatherMap = {
 
     detectCurrentLocation(){
         return `${this.baseURL2}/ipinfo?&apiKey=${this.apiKey2}`;
+    },
+
+    autocompleteFeature(){
+       return `${this.baseURL}/search.json?key=key=${this.apiKey}&q=${this.location}`;
     },
 
     
