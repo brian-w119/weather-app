@@ -4,54 +4,57 @@
 
 const weatherMap = {
 
-    baseURL            :"http://api.weatherapi.com/v1",
-    apiKey             :"83c85d12493343dfa1d173629232808",
+    baseURL  : "http://api.weatherapi.com/v1",
+    apiKey   : "83c85d12493343dfa1d173629232808",
 
-    baseURL2           :"https://api.geoapify.com/v1",
-    apiKey2            :"3168d1c4bdac4b6c9f105582e696da33",
-
-
-
-
-    location           :"",
-    coordinates        :[],
-    currentCondition   :[],
-    temperatureNow     :[],
-    humidityNow        :[],
-    currentCloudCover  :[],
-    currentAtmPressure :[],
-    tempFeelsLike      :[],
-    userLocationCurrent:"",
-    locationCoordinates:[],
+    baseURL2 : "https://api.geoapify.com/v1",
+    apiKey2  : "3168d1c4bdac4b6c9f105582e696da33",
 
 
 
-    detectLocalCondition(){
-       return `${this.baseURL}/current.json?key=${this.apiKey}&q=${this.location}&qi=no`;
+
+    location           : "",
+    coordinates        : [],
+    currentCondition   : [],
+    temperatureNow     : [],
+    humidityNow        : [],
+    currentCloudCover  : [],
+    currentAtmPressure : [],
+    tempFeelsLike      : [],
+    userLocationCurrent: "",
+    locationCoordinates: [],
+
+    searchbar          : document.querySelector("#searchBar"),
+    searchButton       : document.querySelector("#searchButton"),
+
+
+
+    detectLocalCondition() {
+        return `${this.baseURL}/current.json?key=${this.apiKey}&q=${this.location}&qi=no`;
     },
 
-    weatherForecast(){
+    weatherForecast() {
         return `${this.baseURL}/forecast.json?key=${this.apiKey}&q=${this.location}&days=7&aqi=no&alerts=no`;
     },
 
-    detectCurrentLocation(){
+    detectCurrentLocation() {
         return `${this.baseURL2}/ipinfo?&apiKey=${this.apiKey2}`;
     },
 
-    autocompleteFeature(){
-       return `${this.baseURL}/search.json?key=key=${this.apiKey}&q=${this.location}`;
+    autocompleteFeature() {
+        return `${this.baseURL}/search.json?key=key=${this.apiKey}&q=${this.location}`;
     },
 
-    
-    async get7dayForecast(){
+
+    async get7dayForecast() {
         const response = await fetch(this.weatherForecast());
         const result = await response.json();
         return result.forecast.forecastday;
     },
 
     //stores coordinates of location in array "coordinates"
-    async getLocation(){
-       
+    async getLocation() {
+
         this.coordinates = [];
         const response = await fetch(this.detectLocalCondition());
         const result = await response.json();
@@ -60,17 +63,18 @@ const weatherMap = {
     },
 
     //pushes user's current location as lat. and lon. to array
-    async getUserLocation(){
+    async getUserLocation() {
 
         locationCoordinates = [];
         const response = await fetch(this.detectCurrentLocation());
         const result = await response.json();
         this.locationCoordinates.push(result.location.latitude);
         this.locationCoordinates.push(result.location.longitude);
+        console.log(result);
     },
 
     //stores current atmospheric conditions in arrays
-    async currentAtmospheric(){
+    async currentAtmospheric() {
 
         this.temperatureNow = [];
         this.currentAtmospheric = [];
@@ -87,13 +91,19 @@ const weatherMap = {
         this.currentCloudCover.push(result.current.cloud);
         this.currentAtmPressure.push(result.current.pressure_mb);
         this.tempFeelsLike.push(result.current.feelslike_c);
-        console.log(this.result);
+        //console.log(this.result);
     },
 
 
 
     //draw map
     init() {
+
+        this.searchButton.addEventListener("click", () => {
+            this.location = "";
+            this.location = this.searchbar.value;
+            console.log(this.location);
+        });
 
 
         google.charts.load('current', {
@@ -115,7 +125,9 @@ const weatherMap = {
 
             chart.draw(data, options);
         };
-         this.get7dayForecast();
+        this.getUserLocation();
     },
+
+
 };
 weatherMap.init();
