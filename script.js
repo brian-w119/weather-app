@@ -33,8 +33,8 @@ const weatherMap = {
         return `${this.baseURL}/current.json?key=${this.apiKey}&q=${this.location}&qi=no`;
     },
 
-    weatherForecast() {
-        return `${this.baseURL}/forecast.json?key=${this.apiKey}&q=${this.location}&days=7&aqi=no&alerts=no`;
+    weatherForecast(situation = this.location) {
+        console.log(`${this.baseURL}/forecast.json?key=${this.apiKey}&q=${situation}&days=7&aqi=no&alerts=no`);
     },
 
     detectCurrentLocation() {
@@ -59,18 +59,22 @@ const weatherMap = {
         const response = await fetch(this.detectLocalCondition());
         const result = await response.json();
         this.coordinates.push(result.location.lat, result.location.lon);
-        return this.coordinates;
+        console.log(this.coordinates);
+        //return this.coordinates;
     },
 
-    //pushes user's current location as lat. and lon. to array
-    async getUserLocation() {
+    //pushes user's current location as lat. and lon., and stores city and country in variable
+    async getCurrentLocation() {
 
         locationCoordinates = [];
         const response = await fetch(this.detectCurrentLocation());
         const result = await response.json();
         this.locationCoordinates.push(result.location.latitude);
         this.locationCoordinates.push(result.location.longitude);
-        console.log(result);
+        const city = result.city.name;
+        const country = result.state.name;
+        const finalResult = `${city}, ${country}`;
+        return finalResult;
     },
 
     //stores current atmospheric conditions in arrays
@@ -90,8 +94,8 @@ const weatherMap = {
         this.humidityNow.push(result.current.humidity);
         this.currentCloudCover.push(result.current.cloud);
         this.currentAtmPressure.push(result.current.pressure_mb);
-        this.tempFeelsLike.push(result.current.feelslike_c);
-        //console.log(this.result);
+        this.tempFeelsLike.push(result.current.feelslike_c); 
+
     },
 
 
@@ -102,7 +106,7 @@ const weatherMap = {
         this.searchButton.addEventListener("click", () => {
             this.location = "";
             this.location = this.searchbar.value;
-            console.log(this.location);
+            
         });
 
 
@@ -125,9 +129,8 @@ const weatherMap = {
 
             chart.draw(data, options);
         };
-        this.getUserLocation();
+        this.getCurrentLocation();
     },
-
 
 };
 weatherMap.init();
