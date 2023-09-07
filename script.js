@@ -14,18 +14,42 @@ const weatherMap = {
 
 
     location           : "",
+    userLocationCurrent: "",
+    locationCoordinates: [],
     coordinates        : [],
+
+    // values for current conditions:
     currentCondition   : [],
     temperatureNow     : [],
     humidityNow        : [],
     currentCloudCover  : [],
     currentAtmPressure : [],
     tempFeelsLike      : [],
-    userLocationCurrent: "",
-    locationCoordinates: [],
+
+    
+
+    // values for the forecast:
+    avgHumidity        : "",
+    avgTemp            : "",
+    windSpeedmax       : "",
+    uvIndex            : "",
+    visibilty          : "",
+    chanceOfRain       : "",
+    chanceOfSnow       : "",
+    maxTemp            : "",
+    minTemp            : "",
+
+    //astronomy values:
+    sunrise            : "",
+    sunset             : "",
+
+
+
+
 
     searchbar          : document.querySelector("#searchBar"),
     searchButton       : document.querySelector("#searchButton"),
+    resultDisplay      : document.querySelector("#resultDisplay"),
 
 
 
@@ -33,8 +57,8 @@ const weatherMap = {
         return `${this.baseURL}/current.json?key=${this.apiKey}&q=${this.location}&qi=no`;
     },
 
-    weatherForecast(situation = this.location) {
-        console.log(`${this.baseURL}/forecast.json?key=${this.apiKey}&q=${situation}&days=7&aqi=no&alerts=no`);
+    weatherForecast(situated = this.location) {
+        return `${this.baseURL}/forecast.json?key=${this.apiKey}&q=${situated}&days=7&aqi=no&alerts=no`;
     },
 
     detectCurrentLocation() {
@@ -47,9 +71,23 @@ const weatherMap = {
 
 
     async get7dayForecast() {
-        const response = await fetch(this.weatherForecast());
+
+        this.avgHumidity  = "";
+        this.avgTemp      = "";  
+        this.windSpeedmax = "";
+        this.uvIndex      = "";    
+        this.visibilty    = "";
+        this.chanceOfRain = "";
+        this.chanceOfSnow = "";
+        this.maxTemp      = "";    
+        this.minTemp      = "";     
+        this.sunrise      = "";
+        this.sunset       = "";  
+
+        const response = await fetch(this.weatherForecast(this.location));
         const result = await response.json();
-        return result.forecast.forecastday;
+
+        console.log(result.forecast.forecastday);
     },
 
     //stores coordinates of location in array "coordinates"
@@ -106,6 +144,7 @@ const weatherMap = {
         this.searchButton.addEventListener("click", () => {
             this.location = "";
             this.location = this.searchbar.value;
+            this.get7dayForecast();
             
         });
 
@@ -129,7 +168,7 @@ const weatherMap = {
 
             chart.draw(data, options);
         };
-        this.getCurrentLocation();
+       // this.get7dayForecast();
     },
 
 };
