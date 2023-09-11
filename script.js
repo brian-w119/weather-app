@@ -13,7 +13,7 @@ const weatherMap = {
 
 
 
-    location           : "",
+    location           : "London, England",
     userLocationCurrent: "",
     locationCoordinates: [],
     coordinates        : [],
@@ -29,27 +29,30 @@ const weatherMap = {
     
 
     // values for the forecast:
-    avgHumidity        : "",
-    avgTemp            : "",
-    windSpeedmax       : "",
-    uvIndex            : "",
-    visibilty          : "",
-    chanceOfRain       : "",
-    chanceOfSnow       : "",
-    maxTemp            : "",
-    minTemp            : "",
+    avgHumidity        : null,
+    avgTemp            : null,
+    windSpeedmax       : null,
+    uvIndex            : null,
+    visibilty          : null,
+    chanceOfRain       : null,
+    chanceOfSnow       : null,
+    maxTemp            : null,
+    minTemp            : null,
 
     //astronomy values:
-    sunrise            : "",
-    sunset             : "",
+    sunrise            : null,
+    sunset             : null,
 
-
-
-
+    //event listeners
 
     searchbar          : document.querySelector("#searchBar"),
     searchButton       : document.querySelector("#searchButton"),
     resultDisplay      : document.querySelector("#resultDisplay"),
+
+    //variables for typewriter effect
+    introduction       : ["Your current location is in or near to x"],
+    speed              : 60,
+    textPosition       : 0,
 
 
 
@@ -58,7 +61,7 @@ const weatherMap = {
     },
 
     weatherForecast(situated = this.location) {
-        return `${this.baseURL}/forecast.json?key=${this.apiKey}&q=${situated}&days=7&aqi=no&alerts=no`;
+        return `${this.baseURL}/forecast.json?key=${this.apiKey}&q=${situated}&days=3&aqi=no&alerts=no`;
     },
 
     detectCurrentLocation() {
@@ -70,19 +73,19 @@ const weatherMap = {
     },
 
 
-    async get7dayForecast() {
+    async get3dayForecast() {
 
-        this.avgHumidity  = "";
-        this.avgTemp      = "";  
-        this.windSpeedmax = "";
-        this.uvIndex      = "";    
-        this.visibilty    = "";
-        this.chanceOfRain = "";
-        this.chanceOfSnow = "";
-        this.maxTemp      = "";    
-        this.minTemp      = "";     
-        this.sunrise      = "";
-        this.sunset       = "";  
+        this.avgHumidity  = null;
+        this.avgTemp      = null;  
+        this.windSpeedmax = null;
+        this.uvIndex      = null;    
+        this.visibilty    = null;
+        this.chanceOfRain = null;
+        this.chanceOfSnow = null;
+        this.maxTemp      = null;    
+        this.minTemp      = null;     
+        this.sunrise      = null;
+        this.sunset       = null;  
 
         const response = await fetch(this.weatherForecast(this.location));
         const result = await response.json();
@@ -112,6 +115,7 @@ const weatherMap = {
         const city = result.city.name;
         const country = result.state.name;
         const finalResult = `${city}, ${country}`;
+        this.userLocationCurrent = finalResult;
         return finalResult;
     },
 
@@ -136,16 +140,37 @@ const weatherMap = {
 
     },
 
+    // prints the user's location in typing effect
+    typewriterEffect(){
+
+       this.resultDisplay.innerHTML = this.introduction[0].substring(0, this.textPosition);
+       if(this.textPosition++ != this.introduction[0].length){
+        setTimeout(this.typewriterEffect, this.speed);
+       };
+    },
+
 
 
     //draw map
     init() {
 
         this.searchButton.addEventListener("click", () => {
+
+            this.resultDisplay.innerHTML = "";
             this.location = "";
             this.location = this.searchbar.value;
-            this.get7dayForecast();
+            this.get3dayForecast();
             
+        });
+
+        // displays user's location on page load
+
+        window.addEventListener("load", async () => {
+
+           this.userLocationCurrent = "";
+           const location = await this.getCurrentLocation();
+           this.resultDisplay.innerHTML =  `You are located in or close to: <br>${location}`;
+    
         });
 
 
@@ -168,7 +193,7 @@ const weatherMap = {
 
             chart.draw(data, options);
         };
-       // this.get7dayForecast();
+       //this.getCurrentLocation();
     },
 
 };
