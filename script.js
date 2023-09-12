@@ -49,8 +49,8 @@ const weatherMap = {
     searchButton       : document.querySelector("#searchButton"),
     resultDisplay      : document.querySelector("#resultDisplay"),
 
-    introduction       : [`Your current location is in or near to ${this.userLocationCurrent}`],
-    speed              : 60,
+    introduction       : null,
+    speed              : 90,
     textPosition       : 0,
     
     
@@ -140,11 +140,12 @@ const weatherMap = {
     },
 
     // prints the user's location in typing effect
-    typewriterEffect(){
-       
+    async typewriterEffect(){
+       this.userLocationCurrent = await this.getCurrentLocation();
+       this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}`],
        this.resultDisplay.innerHTML = this.introduction[0].substring(0, this.textPosition);
        if(this.textPosition++ != this.introduction[0].length){
-        setTimeout(this.typewriterEffect, this.speed);
+        setTimeout( ()=> this.typewriterEffect(), this.speed);
        };
     },
 
@@ -166,11 +167,6 @@ const weatherMap = {
 
         window.addEventListener("load", async () => {
 
-           this.userLocationCurrent = "";
-           /*
-           //const location = await this.getCurrentLocation();
-           this.resultDisplay.innerHTML =  `You are located in or close to: <br>${location}`;*/
-           await this.getCurrentLocation();
            this.typewriterEffect();
         });
 
