@@ -50,7 +50,7 @@ const weatherMap = {
     resultDisplay      : document.querySelector("#resultDisplay"),
 
     introduction       : null,
-    speed              : 300,
+    speed              : 50,
     textPosition       : 0,
     
     
