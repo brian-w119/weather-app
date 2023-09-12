@@ -55,8 +55,6 @@ const weatherMap = {
     
     
 
-
-
     detectLocalCondition() {
         return `${this.baseURL}/current.json?key=${this.apiKey}&q=${this.location}&qi=no`;
     },
