@@ -14,7 +14,7 @@ const weatherMap = {
 
 
 
-    location                   : "Atlanta, Georgia",
+    location                   : "",
     userLocationCurrent        : "",
     countryCode                : "",
     currentLocationCoordinates : [],
@@ -84,7 +84,7 @@ const weatherMap = {
     },
 
     generateZoomedMap(){
-        return `${this.baseURL2}/staticmap?style=osm-carto&width=350&height=400&center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=13&apiKey=${this.apiKey3}`;
+        return `${this.baseURL2}/staticmap?style=osm-carto&width=400&height=400&center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=13&apiKey=${this.apiKey3}`;
     },
 
 
@@ -94,7 +94,7 @@ const weatherMap = {
         await this.getLocation(); 
         
         //const response = await fetch(this.generateZoomedMap());
-        this.image.src = this.generateZonedMap();
+        this.image.src = this.generateZoomedMap();
     },
 
 
