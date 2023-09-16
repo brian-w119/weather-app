@@ -9,14 +9,18 @@ const weatherMap = {
 
     baseURL2 : "https://api.geoapify.com/v1",
     apiKey2  : "3168d1c4bdac4b6c9f105582e696da33",
+    apiKey3  : "ece9098a17614bb5aefd8164203b3e95",
 
 
 
 
-    location           : "Kingston, Jamaica",
-    userLocationCurrent: "",
-    locationCoordinates: [],
-    coordinates        : [],
+    location                   : "Atlanta, Georgia",
+    userLocationCurrent        : "",
+    countryCode                : "",
+    currentLocationCoordinates : [],
+    coordinates                : [],
+    longitude                  : null,
+    latitude                   : null,
 
     // values for current conditions:
     currentCondition   : [],
@@ -34,6 +38,7 @@ const weatherMap = {
     windSpeedmax       : null,
     uvIndex            : null,
     visibilty          : null,
+
     chanceOfRain       : null,
     chanceOfSnow       : null,
     maxTemp            : null,
@@ -43,15 +48,16 @@ const weatherMap = {
     sunrise            : null,
     sunset             : null,
 
-    //event listeners
-
     searchbar          : document.querySelector("#searchBar"),
     searchButton       : document.querySelector("#searchButton"),
     resultDisplay      : document.querySelector("#resultDisplay"),
+    intro              : document.querySelector(".intro"),
+    image              : document.querySelector(".image"),
 
     introduction       : null,
     speed              : 50,
     textPosition       : 0,
+
 
     // changes to a 1 when search is clicked
     searchClicked      : 0,
@@ -72,10 +78,26 @@ const weatherMap = {
     autocompleteFeature(){
         return `${this.baseURL}/search.json?key=key=${this.apiKey}&q=${this.location}`;
     },
-
+    
     get2LetterCode(){
         return `${this.baseURL2}/geocode/search?text=${this.location}&lang=en&limit=10&type=city&apiKey=${this.apiKey2}`;
     },
+
+    generateZoomedMap(){
+        return `${this.baseURL2}/staticmap?style=osm-carto&width=350&height=400&
+        center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=13&apiKey=${this.apiKey3}`;
+    },
+
+
+    async renderZoomedMap(){
+ 
+        this.location = [];
+        this.getLocation(); 
+        
+        const response = await fetch(this.generateZoomedMap());
+        this.image.src = response;
+    },
+
 
     async get2LetterCountryCode(){
 
@@ -83,7 +105,8 @@ const weatherMap = {
         const result = await response.json();
         let finalResult = result.features[0].properties.country_code;
         finalResult = finalResult.toUpperCase();
-        console.log(finalResult);
+        this.countryCode = finalResult;
+        return finalResult;
 
     },
 
@@ -112,35 +135,35 @@ const weatherMap = {
     },
 
     //stores coordinates of location in array "coordinates"
-    async getLocation() {
+    async getLocation(){
 
         this.coordinates = [];
         const response = await fetch(this.detectLocalCondition());
         const result = await response.json();
-        this.coordinates.push(result.location.lat, result.location.lon);
+        this.coordinates.push(result.location.lon, result.location.lat);
         //console.log(this.coordinates);
-        console.log(result);
+        //console.log(result);
         //return this.coordinates;
     },
 
     //pushes user's current location as lat. and lon., and stores city and country in variable
-    async getCurrentLocation() {
+    async getCurrentLocation(){
 
-        locationCoordinates = [];
+        coordinates = [];
         const response = await fetch(this.detectCurrentLocation());
         const result = await response.json();
-        this.locationCoordinates.push(result.location.latitude);
-        this.locationCoordinates.push(result.location.longitude);
+        this.coordinates.push(result.location.longitude, result.location.latitude);
         const city = result.city.name;
         const country = result.state.name;
         const finalResult = `${city}, ${country}`;
         this.userLocationCurrent = finalResult;
+        console.log(this.coordinates);
         return finalResult;
-        
+
     },
 
     //stores current atmospheric conditions in arrays
-    async currentAtmospheric() {
+    async currentAtmospheric(){
 
         this.temperatureNow = [];
         this.currentAtmospheric = [];
@@ -168,7 +191,7 @@ const weatherMap = {
     // prints the user's location in typing effect
     typewriterEffect(){
 
-       this.resultDisplay.innerHTML = this.introduction[0].substring(0, this.textPosition);
+       this.intro.innerHTML = this.introduction[0].substring(0, this.textPosition);
        if(this.textPosition++ != this.introduction[0].length){
         setTimeout( ()=> this.typewriterEffect(), this.speed);
        };
@@ -177,7 +200,7 @@ const weatherMap = {
     optionsObject(){
 
         const options = {
-            region: this.regionCode,
+            region: this.countryCode,
             backgroundColor: '#81d4fa',
             datalessRegionColor: '#f8bbd0',
             defaultColor: '#f5f5f5',
@@ -185,17 +208,20 @@ const weatherMap = {
     },
 
     //part of function required to draw map
-    drawRegionsMap() {
+    drawRegionsMap(){
+
         let data = google.visualization.arrayToDataTable([
             ['Country']
         ]);
 
         const options = {
+            //region: this.countryCode,
             backgroundColor: "rgb(62, 138, 237)",
         };
 
        chart = new google.visualization.GeoChart(document.getElementById('worldMap'));
        chart.draw(data, options);
+
     },
 
     //draw map
@@ -211,8 +237,9 @@ const weatherMap = {
         
        // displays user's location on page load with typewriter effect
         window.addEventListener("load", async () => {
+           this.coordinates = [];
            await this.setLocation();
-           this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}`],
+           this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
         });
 
@@ -225,7 +252,7 @@ const weatherMap = {
         window.addEventListener("load", () => {
             this.drawRegionsMap();
         });
-        this.get2LetterCountryCode();
+        this.renderZoomedMap();
     },
 };
 weatherMap.init();
