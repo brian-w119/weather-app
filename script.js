@@ -84,18 +84,17 @@ const weatherMap = {
     },
 
     generateZoomedMap(){
-        return `${this.baseURL2}/staticmap?style=osm-carto&width=350&height=400&
-        center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=13&apiKey=${this.apiKey3}`;
+        return `${this.baseURL2}/staticmap?style=osm-carto&width=350&height=400&center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=13&apiKey=${this.apiKey3}`;
     },
 
 
     async renderZoomedMap(){
  
-        this.location = [];
-        this.getLocation(); 
+        this.coordinates = [];
+        await this.getLocation(); 
         
-        const response = await fetch(this.generateZoomedMap());
-        this.image.src = response;
+        //const response = await fetch(this.generateZoomedMap());
+        this.image.src = this.generateZonedMap();
     },
 
 
