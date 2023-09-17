@@ -23,12 +23,12 @@ const weatherMap = {
     latitude                   : null,
 
     // values for current conditions:
-    currentCondition   : [],
-    temperatureNow     : [],
-    humidityNow        : [],
-    currentCloudCover  : [],
-    currentAtmPressure : [],
-    tempFeelsLike      : [],
+    currentCondition   : null,
+    temperatureNow     : null,
+    humidityNow        : null,
+    currentCloudCover  : null,
+    currentAtmPressure : null,
+    tempFeelsLike      : null,
 
     
 
@@ -53,6 +53,7 @@ const weatherMap = {
     resultDisplay      : document.querySelector("#resultDisplay"),
     intro              : document.querySelector(".intro"),
     image              : document.querySelector(".image"),
+    climateDisplay     : document.querySelector("#climateData"),
 
     introduction       : null,
     speed              : 50,
@@ -147,7 +148,8 @@ const weatherMap = {
 
     //pushes user's current location as lat. and lon., and stores city and country in variable
     async getCurrentLocation(){
-
+        
+        this.location = "";
         coordinates = [];
         const response = await fetch(this.detectCurrentLocation());
         const result = await response.json();
@@ -156,35 +158,46 @@ const weatherMap = {
         const country = result.state.name;
         const finalResult = `${city}, ${country}`;
         this.userLocationCurrent = finalResult;
-        console.log(this.coordinates);
-        return finalResult;
+        this.location = finalResult;
+        return this.location;
 
     },
 
     //stores current atmospheric conditions in arrays
     async currentAtmospheric(){
 
-        this.temperatureNow = [];
-        this.currentAtmospheric = [];
-        this.currentCloudCover = [];
-        this.humidityNow = [];
-        this.tempFeelsLike = [];
-        this.currentCondition = [];
+        this.temperatureNow = null;
+        this.currentAtmPressure = null;
+        this.currentCloudCover = null;
+        this.humidityNow = null;
+        this.tempFeelsLike = null;
+        this.currentCondition = null;
 
         const response = await fetch(this.detectLocalCondition());
         const result = await response.json();
-        this.currentCondition.push(result.current.condition.text);
-        this.temperatureNow.push(result.current.temp_c);
-        this.humidityNow.push(result.current.humidity);
-        this.currentCloudCover.push(result.current.cloud);
-        this.currentAtmPressure.push(result.current.pressure_mb);
-        this.tempFeelsLike.push(result.current.feelslike_c); 
+        this.currentCondition = result.current.condition.text;
+        this.temperatureNow  = result.current.temp_c;
+        this.humidityNow = result.current.humidity;
+        this.currentCloudCover = result.current.cloud;
+        this.currentAtmPressure = result.current.pressure_mb;
+        this.tempFeelsLike = result.current.feelslike_c; 
+        console.log(this.currentCloudCover);
 
     },
+
+    displayClimate(){
+        this.climateDisplay.innerHTML = `Current Temperature: ${this.temperatureNow}°C\n
+        Atmospheric pressure: ${this.currentAtmPressure}\n
+        Cloud Cover: ${this.currentCloudCover}\nHumidity: ${this.humidityNow}`;
+    },
+
+
 
     async setLocation(){
         this.userLocationCurrent = await this.getCurrentLocation();
+        this.location = this.userLocationCurrent;
     },
+    
 
 
     // prints the user's location in typing effect
@@ -235,12 +248,18 @@ const weatherMap = {
 
         
        // displays user's location on page load with typewriter effect
+        
         window.addEventListener("load", async () => {
            this.coordinates = [];
+           this.location = "";
            await this.setLocation();
+           this.image.src = this.generateZoomedMap();
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
+           await this.currentAtmospheric();
+           this.displayClimate();
         });
+        
 
 
         google.charts.load('current', {
@@ -251,7 +270,7 @@ const weatherMap = {
         window.addEventListener("load", () => {
             this.drawRegionsMap();
         });
-        this.renderZoomedMap();
+        this.getCurrentLocation();
     },
 };
 weatherMap.init();
