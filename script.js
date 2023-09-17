@@ -21,6 +21,7 @@ const weatherMap = {
     coordinates                : [],
     longitude                  : null,
     latitude                   : null,
+    weatherCondition           : [],
 
     // values for current conditions:
     currentCondition   : null,
@@ -142,7 +143,7 @@ const weatherMap = {
         const result = await response.json();
         this.coordinates.push(result.location.lon, result.location.lat);
         //console.log(this.coordinates);
-        //console.log(result);
+        console.log(result);
         //return this.coordinates;
     },
 
@@ -163,7 +164,7 @@ const weatherMap = {
 
     },
 
-    //stores current atmospheric conditions in arrays
+    //stores current atmospheric condition and pushes to weatherCondition array
     async currentAtmospheric(){
 
         this.temperatureNow = null;
@@ -172,25 +173,53 @@ const weatherMap = {
         this.humidityNow = null;
         this.tempFeelsLike = null;
         this.currentCondition = null;
+        this.uvIndex = null;
 
         const response = await fetch(this.detectLocalCondition());
         const result = await response.json();
+
         this.currentCondition = result.current.condition.text;
         this.temperatureNow  = result.current.temp_c;
         this.humidityNow = result.current.humidity;
         this.currentCloudCover = result.current.cloud;
         this.currentAtmPressure = result.current.pressure_mb;
         this.tempFeelsLike = result.current.feelslike_c; 
-        console.log(this.currentCloudCover);
+        this.uvIndex = (result.current.uv).toFixed(1);
+        
+        
+        const current_temp = `Temperature: ${this.temperatureNow}°C`;
+        this.weatherCondition.push(current_temp);
 
+        const currentCondition = `Condition: ${this.currentCondition}`;
+        this.weatherCondition.push(currentCondition);
+
+        const currentHumidity = `Humidity: ${this.humidityNow}%`;
+        this.weatherCondition.push(currentHumidity);
+
+        const tempLike = `Feels Like: ${this.tempFeelsLike}°C`;
+        this.weatherCondition.push(tempLike);
+
+        const cloudCover = `Cloud Cover: ${this.currentCloudCover}%`;
+        this.weatherCondition.push(cloudCover);
+
+        const pressure = `Atmospheric Pressure: ${this.currentAtmPressure}mb`;
+        this.weatherCondition.push(pressure);
+
+        const uv = `UV Index: ${this.uvIndex}`;
+        this.weatherCondition.push(uv);
+
+        this.displayCurrentWeather();
+      
     },
 
-    displayClimate(){
-        this.climateDisplay.innerHTML = `Current Temperature: ${this.temperatureNow}°C\n
-        Atmospheric pressure: ${this.currentAtmPressure}\n
-        Cloud Cover: ${this.currentCloudCover}\nHumidity: ${this.humidityNow}`;
+    displayCurrentWeather(){
+         
+        const howLong = this.weatherCondition.length;
+        this.climateDisplay.style.textIndent = "20px";
+        for(let i = 0; i < howLong; i++){
+           this.climateDisplay.innerHTML += "<pre>" + this.weatherCondition[i] + "<br><br>";
+        };
     },
-
 
 
     async setLocation(){
@@ -212,10 +241,12 @@ const weatherMap = {
     optionsObject(){
 
         const options = {
+
             region: this.countryCode,
             backgroundColor: '#81d4fa',
             datalessRegionColor: '#f8bbd0',
             defaultColor: '#f5f5f5',
+
         }
     },
 
@@ -240,24 +271,29 @@ const weatherMap = {
     init(){
 
         this.searchButton.addEventListener("click", () => {
+
             this.resultDisplay.innerHTML = "";
             this.location = "";
             this.location = this.searchbar.value;
             this.get3dayForecast();
+
         });
 
         
        // displays user's location on page load with typewriter effect
         
         window.addEventListener("load", async () => {
+
            this.coordinates = [];
            this.location = "";
+           this.userLocationCurrent = "";
            await this.setLocation();
            this.image.src = this.generateZoomedMap();
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            await this.currentAtmospheric();
-           this.displayClimate();
+           //this.displayClimate();
+
         });
         
 
@@ -270,7 +306,7 @@ const weatherMap = {
         window.addEventListener("load", () => {
             this.drawRegionsMap();
         });
-        this.getCurrentLocation();
+    
     },
 };
 weatherMap.init();
