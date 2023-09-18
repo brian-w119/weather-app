@@ -98,11 +98,6 @@ const weatherMap = {
         this.image.src = this.generateZoomedMap();
     },
 
-    async renderSearchedMap(){
-         await this.get3dayForecast();
-         this.image.src = this.generateZoomedMap();
-
-    },
 
     async get2LetterCountryCode(){
 
@@ -139,7 +134,7 @@ const weatherMap = {
         this.coordinates.push(result.location.lat, result.location.lon);
         this.intro = "";
         
-        console.log(this.coordinates);
+        //console.log(this.coordinates);
     },
 
     //stores coordinates of location in array "coordinates"
@@ -229,6 +224,7 @@ const weatherMap = {
     },
 
     async setLocation(){
+
         this.userLocationCurrent = await this.getCurrentLocation();
         this.location = this.userLocationCurrent;
     },
