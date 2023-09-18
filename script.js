@@ -86,14 +86,14 @@ const weatherMap = {
     },
 
     generateZoomedMap(){
-        return `${this.baseURL2}/staticmap?style=osm-carto&width=400&height=400&center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=13&apiKey=${this.apiKey3}`;
+        return `${this.baseURL2}/staticmap?style=osm-carto&width=400&height=400&center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=11&apiKey=${this.apiKey3}`;
     },
 
    //generates location map on page load
     async renderZoomedMap(){
  
         //this.coordinates = [];
-        //await this.getLocation(); 
+        await this.getLocation(); 
         //const response = await fetch(this.generateZoomedMap());
         this.image.src = this.generateZoomedMap();
     },
@@ -131,10 +131,10 @@ const weatherMap = {
 
         const response = await fetch(this.weatherForecast(this.location));
         const result = await response.json();
-        this.coordinates.push(result.location.lat, result.location.lon);
+        this.coordinates.push(result.location.lon, result.location.lat);
         this.intro = "";
         
-        //console.log(this.coordinates);
+        console.log(result);
     },
 
     //stores coordinates of location in array "coordinates"
@@ -275,6 +275,7 @@ const weatherMap = {
 
           await this.get3dayForecast();
           this.image.src = this.generateZoomedMap();
+          
 
         });
 
@@ -282,7 +283,7 @@ const weatherMap = {
         
         window.addEventListener("load", async () => {
 
-           this.searchClicked = 0;
+           //this.searchClicked = 0;
            this.coordinates = [];
            this.location = "";
            this.userLocationCurrent = "";
