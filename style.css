@@ -112,4 +112,11 @@ body{
     background-color: white;
 }
 
+#forecastTitle{
+    position: absolute;
+    right: 400px;
+    bottom: 430px;
+    font-weight: bold;
+}
+
 

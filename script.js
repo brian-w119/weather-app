@@ -89,16 +89,20 @@ const weatherMap = {
         return `${this.baseURL2}/staticmap?style=osm-carto&width=400&height=400&center=lonlat:${this.coordinates[0]},${this.coordinates[1]}&zoom=13&apiKey=${this.apiKey3}`;
     },
 
-
+   //generates location map on page load
     async renderZoomedMap(){
  
-        this.coordinates = [];
-        await this.getLocation(); 
-        
+        //this.coordinates = [];
+        //await this.getLocation(); 
         //const response = await fetch(this.generateZoomedMap());
         this.image.src = this.generateZoomedMap();
     },
 
+    async renderSearchedMap(){
+         await this.get3dayForecast();
+         this.image.src = this.generateZoomedMap();
+
+    },
 
     async get2LetterCountryCode(){
 
@@ -111,9 +115,9 @@ const weatherMap = {
 
     },
 
-
     async get3dayForecast(){
 
+        this.searchClicked = 1;
         this.location     = null;
         this.avgHumidity  = null;
         this.avgTemp      = null;  
@@ -125,21 +129,23 @@ const weatherMap = {
         this.maxTemp      = null;    
         this.minTemp      = null;     
         this.sunrise      = null;
-        this.sunset       = null;  
+        this.sunset       = null; 
+        this.coordinates  = []; 
+
+        this.location = this.searchbar.value;
 
         const response = await fetch(this.weatherForecast(this.location));
         const result = await response.json();
-
-        this.searchClicked = 1;
-
-        console.log(result.forecast.forecastday);
+        this.coordinates.push(result.location.lat, result.location.lon);
+        this.intro = "";
         
+        console.log(this.coordinates);
     },
 
     //stores coordinates of location in array "coordinates"
     async getLocation(){
 
-        this.loaction = null;
+        this.location = null;
         this.coordinates = [];
         const response = await fetch(this.detectLocalCondition());
         const result = await response.json();
@@ -226,6 +232,7 @@ const weatherMap = {
         this.userLocationCurrent = await this.getCurrentLocation();
         this.location = this.userLocationCurrent;
     },
+
     
     // prints the user's location in typing effect
     typewriterEffect(){
@@ -268,12 +275,10 @@ const weatherMap = {
     //draw map
     init(){
 
-        this.searchButton.addEventListener("click", () => {
+        this.searchButton.addEventListener("click", async () => {
 
-            this.resultDisplay.innerHTML = "";
-            this.location = "";
-            this.location = this.searchbar.value;
-            this.get3dayForecast();
+          await this.get3dayForecast();
+          this.image.src = this.generateZoomedMap();
 
         });
 
@@ -281,6 +286,7 @@ const weatherMap = {
         
         window.addEventListener("load", async () => {
 
+           this.searchClicked = 0;
            this.coordinates = [];
            this.location = "";
            this.userLocationCurrent = "";
@@ -301,7 +307,7 @@ const weatherMap = {
         window.addEventListener("load", () => {
             this.drawRegionsMap();
         });
-      //this.getCurrentLocation();
+
     },
 };
 weatherMap.init();
