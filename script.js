@@ -114,6 +114,7 @@ const weatherMap = {
 
     async get3dayForecast(){
 
+        this.location     = null;
         this.avgHumidity  = null;
         this.avgTemp      = null;  
         this.windSpeedmax = null;
@@ -138,6 +139,7 @@ const weatherMap = {
     //stores coordinates of location in array "coordinates"
     async getLocation(){
 
+        this.loaction = null;
         this.coordinates = [];
         const response = await fetch(this.detectLocalCondition());
         const result = await response.json();
@@ -156,10 +158,11 @@ const weatherMap = {
         const result = await response.json();
         this.coordinates.push(result.location.longitude, result.location.latitude);
         const city = result.city.name;
-        const country = result.state.name;
+        const country = result.country.name;
         const finalResult = `${city}, ${country}`;
         this.userLocationCurrent = finalResult;
         this.location = finalResult;
+        //console.log(finalResult);
         return this.location;
 
     },
@@ -185,7 +188,6 @@ const weatherMap = {
         this.currentAtmPressure = result.current.pressure_mb;
         this.tempFeelsLike = result.current.feelslike_c; 
         this.uvIndex = (result.current.uv).toFixed(1);
-        
         
         const current_temp = `Temperature: ${this.temperatureNow}°C`;
         this.weatherCondition.push(current_temp);
@@ -215,20 +217,16 @@ const weatherMap = {
     displayCurrentWeather(){
          
         const howLong = this.weatherCondition.length;
-        this.climateDisplay.style.textIndent = "20px";
         for(let i = 0; i < howLong; i++){
            this.climateDisplay.innerHTML += "<pre>" + this.weatherCondition[i] + "<br><br>";
         };
     },
-
 
     async setLocation(){
         this.userLocationCurrent = await this.getCurrentLocation();
         this.location = this.userLocationCurrent;
     },
     
-
-
     // prints the user's location in typing effect
     typewriterEffect(){
 
@@ -279,8 +277,7 @@ const weatherMap = {
 
         });
 
-        
-       // displays user's location on page load with typewriter effect
+        // displays user's location on page load with typewriter effect
         
         window.addEventListener("load", async () => {
 
@@ -291,12 +288,10 @@ const weatherMap = {
            this.image.src = this.generateZoomedMap();
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
-           await this.currentAtmospheric();
-           //this.displayClimate();
+           this.currentAtmospheric();
 
         });
         
-
 
         google.charts.load('current', {
             'packages': ['geochart'],
@@ -306,7 +301,7 @@ const weatherMap = {
         window.addEventListener("load", () => {
             this.drawRegionsMap();
         });
-    
+      //this.getCurrentLocation();
     },
 };
 weatherMap.init();
