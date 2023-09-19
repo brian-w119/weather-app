@@ -133,7 +133,7 @@ const weatherMap = {
         const result = await response.json();
         this.coordinates.push(result.location.lon, result.location.lat);
         this.intro = "";
-        
+
         console.log(result);
     },
 
@@ -170,6 +170,8 @@ const weatherMap = {
 
     //stores current atmospheric condition and pushes to weatherCondition array
     async currentAtmospheric(){
+
+        this.searchClicked === 1 ? this.location = this.searchbar.value: "";
 
         this.temperatureNow = null;
         this.currentAtmPressure = null;
@@ -212,7 +214,7 @@ const weatherMap = {
         this.weatherCondition.push(uv);
 
         this.displayCurrentWeather();
-      
+
     },
 
     displayCurrentWeather(){
@@ -220,6 +222,14 @@ const weatherMap = {
         const howLong = this.weatherCondition.length;
         for(let i = 0; i < howLong; i++){
            this.climateDisplay.innerHTML += "<pre>" + this.weatherCondition[i] + "<br><br>";
+        };
+    },
+
+    clearCurrentWeather(){
+ 
+       const howLong = this.weatherCondition.length;
+       for(let i = 0; i < howLong; i++){
+           this.climateDisplay.innerHTML += "";
         };
     },
 
@@ -272,18 +282,19 @@ const weatherMap = {
     init(){
 
         this.searchButton.addEventListener("click", async () => {
-
+  
+          this.clearCurrentWeather();
           await this.get3dayForecast();
           this.image.src = this.generateZoomedMap();
+          this.currentAtmospheric();
           
-
-        });
+    });
 
         // displays user's location on page load with typewriter effect
         
         window.addEventListener("load", async () => {
 
-           //this.searchClicked = 0;
+           this.searchClicked = 0;
            this.coordinates = [];
            this.location = "";
            this.userLocationCurrent = "";
@@ -292,7 +303,6 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
-
         });
         
 
