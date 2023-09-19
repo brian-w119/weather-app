@@ -94,7 +94,7 @@ body{
     top: 70px;
     font-weight: bold;
 }
-/*
+
 .forecast{
     width: 840px;
     height: 400px;
@@ -106,7 +106,7 @@ body{
     grid-template-columns: auto auto auto;
     gap: 10px;
 }
-*/
+
 .forecast > *{
     text-align: center;
     background-color: white;

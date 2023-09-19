@@ -216,7 +216,7 @@ const weatherMap = {
         this.displayCurrentWeather();
 
     },
-
+    
     displayCurrentWeather(){
         const howLong = this.weatherCondition.length;
         for(let i = 0; i < howLong; i++){
@@ -225,10 +225,8 @@ const weatherMap = {
     },
 
     clearCurrentWeather(){
-       const howLong = this.weatherCondition.length;
-       for(let i = 0; i < howLong; i++){
-           this.climateDisplay.innerHTML = "";
-        };
+        this.climateDisplay.innerHTML = '';
+        this.weatherCondition = [];
     },
 
     async setLocation(){
