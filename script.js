@@ -51,6 +51,7 @@ const weatherMap = {
     sunset             : [],
     forecastVis        : [], 
     forecastCondition   : [],
+    threeDayForecast    : [],
 
     searchbar          : document.querySelector("#searchBar"),
     searchButton       : document.querySelector("#searchButton"),
@@ -58,6 +59,9 @@ const weatherMap = {
     intro              : document.querySelector(".intro"),
     image              : document.querySelector(".image"),
     climateDisplay     : document.querySelector("#climateData"),
+    column1            : document.querySelector("#column1"),
+    column2            : document.querySelector("#column2"),
+    column3            : document.querySelector("#column3"),
 
     introduction       : null,
     speed              : 50,
@@ -134,6 +138,7 @@ const weatherMap = {
         this.forecastCondition  = []; 
         this.forecastVis       = [];
 
+
         this.location = this.searchbar.value;
 
         const response = await fetch(this.weatherForecast(this.location));
@@ -142,6 +147,7 @@ const weatherMap = {
         this.coordinates.push(result.location.lon, result.location.lat);
         this.timeAtLocation = result.current.last_updated;
 
+        //push respecyive values to their arrays
         for(let count = 0; count < 3; count++){
 
             const resultPath = result.forecast.forecastday[count];
@@ -156,12 +162,29 @@ const weatherMap = {
             this.maxTemp.push(resultPath2.maxtemp_c);
             this.minTemp.push(resultPath2.mintemp_c);
             this.windSpeedmax.push(resultPath2.maxwind_mph);
-         
         };
+        //push all arrays to array "threeDayforecast"
+        this.threeDayForecast.push(this.sunrise);
+        this.threeDayForecast.push(this.sunset);
+        this.threeDayForecast.push(this.avgHumidity);
+        this.threeDayForecast.push(this.avgTemp);
+        this.threeDayForecast.push(this.forecastVis);
+        this.threeDayForecast.push(this.forecastCondition);
+        this.threeDayForecast.push(this.maxTemp);
+        this.threeDayForecast.push(this.minTemp);
+        this.threeDayForecast.push(this.windSpeedmax);
+
+        console.log(this.threeDayForecast);
+    },
+
+
+    displayForecast(){
+        
+        
     },
 
     displayLocationTime(){
-        
+
         this.timeAtLocation = this.timeAtLocation.slice(10, 17);
         this.intro.innerHTML = "";
         this.intro.innerHTML = `See the weather in ${this.location} as at ${this.timeAtLocation} Hours, local time.`;
