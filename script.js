@@ -59,7 +59,8 @@ const weatherMap = {
     introduction       : null,
     speed              : 50,
     textPosition       : 0,
-
+    localTime          : null,
+    timeAtLocation     : null,
 
     // changes to a 1 when search is clicked
     searchClicked      : 0,
@@ -132,10 +133,17 @@ const weatherMap = {
         const response = await fetch(this.weatherForecast(this.location));
         const result = await response.json();
         this.coordinates.push(result.location.lon, result.location.lat);
-        this.intro = "";
-
+        this.timeAtLocation = result.current.last_updated;
         console.log(result);
     },
+
+    displayLocationTime(){
+        this.timeAtLocation = this.timeAtLocation.slice(10, 17);
+        this.intro.innerHTML = "";
+        this.intro.innerHTML = `See the weather in ${this.location} as at ${this.timeAtLocation} Hours, local time.`;
+        this.intro.style.color = "red";
+    },
+
 
     //stores coordinates of location in array "coordinates"
     async getLocation(){
@@ -252,7 +260,6 @@ const weatherMap = {
             backgroundColor: '#81d4fa',
             datalessRegionColor: '#f8bbd0',
             defaultColor: '#f5f5f5',
-
         }
     },
 
@@ -273,14 +280,38 @@ const weatherMap = {
 
     },
 
+    time(){
+       
+        this.localTime = null; 
+        
+        const d        = new Date();
+        let hour       = d.getHours();
+        let min        = d.getMinutes();
+        let sec        = d.getSeconds();
+        
+        const newTime  = `${hour}:${min}:${sec}`;
+        this.localTime = newTime;
+
+        console.log(this.localTime);
+        return this.localTime;
+    },
+
+    displayTime(){
+
+        this.localTime = null;
+        setInterval(this.time, 1000);
+    },
+    
+
     //draw map
     init(){
 
         this.searchButton.addEventListener("click", async () => {
-  
+          
           this.clearCurrentWeather();
           await this.get3dayForecast();
           this.image.src = this.generateZoomedMap();
+          this.displayLocationTime();
           this.currentAtmospheric();
           
     });
@@ -309,7 +340,6 @@ const weatherMap = {
         window.addEventListener("load", () => {
             this.drawRegionsMap();
         });
-
     },
 };
 weatherMap.init();
