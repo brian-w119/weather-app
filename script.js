@@ -34,20 +34,23 @@ const weatherMap = {
     
 
     // values for the forecast:
-    avgHumidity        : null,
-    avgTemp            : null,
-    windSpeedmax       : null,
+    avgHumidity        : [],
+    avgTemp            : [],
+    maxTemp            : [],
+    minTemp            : [],
+    windSpeedmax       : [],
     uvIndex            : null,
     visibilty          : null,
-
-    chanceOfRain       : null,
-    chanceOfSnow       : null,
-    maxTemp            : null,
-    minTemp            : null,
-
-    //astronomy values:
-    sunrise            : null,
-    sunset             : null,
+    chanceOfRain       : [],
+    chanceOfSnow       : [],
+    maxTemp            : [],
+    minTemp            : [],
+    chanceRain         : [],
+    chanceSnow         : [],
+    sunrise            : [],
+    sunset             : [],
+    forecastVis        : [], 
+    forecastCondition   : [],
 
     searchbar          : document.querySelector("#searchBar"),
     searchButton       : document.querySelector("#searchButton"),
@@ -115,29 +118,50 @@ const weatherMap = {
 
         this.searchClicked = 1;
         this.location     = null;
-        this.avgHumidity  = null;
-        this.avgTemp      = null;  
-        this.windSpeedmax = null;
+        this.avgHumidity  = [];
+        this.avgTemp      = [];  
+        this.windSpeedmax = [];
         this.uvIndex      = null;    
         this.visibilty    = null;
-        this.chanceOfRain = null;
-        this.chanceOfSnow = null;
-        this.maxTemp      = null;    
-        this.minTemp      = null;     
-        this.sunrise      = null;
-        this.sunset       = null; 
-        this.coordinates  = []; 
+        this.chanceOfRain = [];
+        this.chanceOfSnow = [];
+        this.maxTemp      = [];    
+        this.minTemp      = [];     
+        this.sunrise      = [];
+        this.sunset       = []; 
+        this.windSpeedmax = [];   
+        this.coordinates  = [];
+        this.forecastCondition  = []; 
+        this.forecastVis       = [];
 
         this.location = this.searchbar.value;
 
         const response = await fetch(this.weatherForecast(this.location));
         const result = await response.json();
+
         this.coordinates.push(result.location.lon, result.location.lat);
         this.timeAtLocation = result.current.last_updated;
-        console.log(result);
+
+        for(let count = 0; count < 3; count++){
+
+            const resultPath = result.forecast.forecastday[count];
+            const resultPath2 = result.forecast.forecastday[count].day;
+
+            this.sunrise.push(resultPath.astro.sunrise);
+            this.sunset.push(resultPath.astro.sunset);
+            this.avgHumidity.push(resultPath2.avghumidity);
+            this.avgTemp.push(resultPath2.avgtemp_c);
+            this.forecastVis.push(resultPath2.avgvis_miles);
+            this.forecastCondition.push(resultPath2.condition.text);
+            this.maxTemp.push(resultPath2.maxtemp_c);
+            this.minTemp.push(resultPath2.mintemp_c);
+            this.windSpeedmax.push(resultPath2.maxwind_mph);
+         
+        };
     },
 
     displayLocationTime(){
+        
         this.timeAtLocation = this.timeAtLocation.slice(10, 17);
         this.intro.innerHTML = "";
         this.intro.innerHTML = `See the weather in ${this.location} as at ${this.timeAtLocation} Hours, local time.`;
