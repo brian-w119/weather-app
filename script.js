@@ -63,9 +63,10 @@ const weatherMap = {
     column2             : document.querySelector("#column2"),
     column3             : document.querySelector("#column3"),
     forecast            : document.querySelector(".forecast"),
-    column0             : document.querySelector("#column0"),
     column1             : document.querySelector("#column1"),
-    column2             : document.querySelector("column2"),
+    column2             : document.querySelector("#column2"),
+    column3             : document.querySelector("#column3"),
+    columnHeading       : document.querySelector("#colHeading"),
 
     introduction        : null,
     speed               : 50,
@@ -199,8 +200,35 @@ const weatherMap = {
         console.log(this.threeDayForecast);
     },
 
-    displayForecast(){
-       
+    forecastday1(){
+        
+        for(let value = 0; value < this.threeDayForecast.length; value++){
+            this.column1.style.color = "red";
+            this.column1.innerHTML += "<pre>" + "<br>" + this.threeDayForecast[value][0];
+        };
+    },
+
+    forecastday2(){
+      
+        for(let value = 0; value < this.threeDayForecast.length; value++){
+            this.column2.style.color = "red";
+            this.column2.innerHTML += "<pre>" + "<br>" + this.threeDayForecast[value][1];
+        };
+    },
+
+    forecastday3(){
+      
+        for(let value = 0; value < this.threeDayForecast.length; value++){
+            this.column3.style.color = "red";
+            this.column3.innerHTML += "<pre>" + "<br>" + this.threeDayForecast[value][2];
+        };
+    },
+
+    forecastAll(){
+
+        this.forecastday1();
+        this.forecastday2();
+        this.forecastday3();
     },
 
     displayLocationTime(){
@@ -375,12 +403,13 @@ const weatherMap = {
 
         this.searchButton.addEventListener("click", async () => {
           
+          this.threeDayForecast = [];
           this.clearCurrentWeather();
           await this.get3dayForecast();
           this.image.src = this.generateZoomedMap();
           this.displayLocationTime();
           this.currentAtmospheric();
-          
+          this.forecastAll();
     });
 
         // displays user's location on page load with typewriter effect

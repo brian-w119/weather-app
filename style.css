@@ -50,7 +50,7 @@ body{
 .intro{
     position: absolute;
     right: 450px;
-    top: 45px;
+    top: 10px;
     width: 400px;
     height: 50px;
     border: 1px solid black;
@@ -110,13 +110,9 @@ body{
 .forecast > *{
     text-align: center;
     background-color: white;
+    overflow: scroll;
 }
 
-#forecastTitle{
-    position: absolute;
-    right: 400px;
-    bottom: 430px;
-    font-weight: bold;
-}
+
 
 
