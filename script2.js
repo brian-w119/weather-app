@@ -1,7 +1,7 @@
 
-export default{
 
-   subRegionCode : {
+
+   const subRegionCode =  {
 
     "015": ["DZ", "EG", "EH", "LY", "MA", "SD", "SS", "TN"],
     "011": ["BF", "BJ", "CI", "CV", "GH", "GM", "GN", "GW", "LR", "ML", "MR", "NE", "NG", "SH", "SL", "SN", "TG"],
@@ -26,7 +26,7 @@ export default{
     "057": ["FM", "GU", "KI", "MH", "MP", "NR", "PW"],
     "061": ["AS", "CK", "NU", "PF", "PN", "TK", "TO", "TV", "WF", "WS"],
 
-  },
+  };
 
    getSubCode(countryCode){
 
@@ -35,8 +35,9 @@ export default{
           return code;
        };
      };
-    }
+    };
 
-};
+
+
 
 
