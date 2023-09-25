@@ -25,11 +25,11 @@ const subRegionCode = {
     "061"        :["AS", "CK", "NU", "PF", "PN", "TK", "TO", "TV", "WF", "WS"],
   
   };
-  
+
   function getSubCode(){
     
     for(const code in subRegionCode){
-       if(subRegionCode[code].includes(countryCode)){
+       if(subRegionCode[code].includes(weatherMap.countryCode)){
           return code;
        }
     };
