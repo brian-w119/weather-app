@@ -22,6 +22,7 @@ const weatherMap = {
     longitude                  : null,
     latitude                   : null,
     weatherCondition           : [],
+    locationName               : [],
 
     // values for current conditions:
     currentCondition    : null,
@@ -52,6 +53,7 @@ const weatherMap = {
     forecastVis         : [], 
     forecastCondition   : [],
     threeDayForecast    : [],
+    subRegionCode       : null,
 
     searchbar           : document.querySelector("#searchBar"),
     searchButton        : document.querySelector("#searchButton"),
@@ -67,6 +69,7 @@ const weatherMap = {
     column2             : document.querySelector("#column2"),
     column3             : document.querySelector("#column3"),
     columnHeading       : document.querySelector("#colHeading"),
+    defaultMap          : document.querySelector("#worldMap"),
 
     introduction        : null,
     speed               : 50,
@@ -119,6 +122,7 @@ const weatherMap = {
         let finalResult = result.features[0].properties.country_code;
         finalResult = finalResult.toUpperCase();
         this.countryCode = finalResult;
+        console.log(this.countryCode);
         return finalResult;
 
     },
@@ -142,12 +146,14 @@ const weatherMap = {
         this.coordinates        = [];
         this.forecastCondition  = []; 
         this.forecastVis        = [];
+        this.locationName       = null;
 
 
         this.location = this.searchbar.value;
 
         const response = await fetch(this.weatherForecast(this.location));
         const result = await response.json();
+        this.locationName = result.location.name;
 
         this.coordinates.push(result.location.lon, result.location.lat);
         this.timeAtLocation = result.current.last_updated;
@@ -198,6 +204,7 @@ const weatherMap = {
         this.threeDayForecast.push(this.windSpeedmax);
          
         console.log(this.threeDayForecast);
+        //console.log(result);
     },
 
     forecastday1(){
@@ -317,6 +324,7 @@ const weatherMap = {
         this.weatherCondition.push(uv);
 
         this.displayCurrentWeather();
+        //console.log(result);
 
     },
     
@@ -346,32 +354,42 @@ const weatherMap = {
         setTimeout( ()=> this.typewriterEffect(), this.speed);
        };
     },
+    
 
-    optionsObject(){
+    highlightCountry(){
+
+        let data = google.visualization.arrayToDataTable([
+            ['Country'],
+            [this.get2LetterCountryCode],
+        
+        ]);
 
         const options = {
-
-            region: this.countryCode,
-            backgroundColor: '#81d4fa',
-            datalessRegionColor: '#f8bbd0',
+            region: this.subRegionCode,
+            backgroundColor: "rgb(62, 138, 237)",
+            datalessRegionColor: "white",
             defaultColor: '#f5f5f5',
-        }
-    },
+        };
 
+        chart = new google.visualization.GeoChart(document.getElementById("worldMap"));
+        chart.draw(data, options);
+
+    },
+    
     //part of function required to draw map
     drawRegionsMap(){
 
         let data = google.visualization.arrayToDataTable([
-            ['Country']
+            ['Country'],
+        
         ]);
 
         const options = {
-            //region: this.countryCode,
-            backgroundColor: "rgb(62, 138, 237)",
+           backgroundColor: "rgb(62, 138, 237)",
         };
-
-       chart = new google.visualization.GeoChart(document.getElementById('worldMap'));
-       chart.draw(data, options);
+        
+        chart = new google.visualization.GeoChart(document.getElementById("worldMap"));
+        chart.draw(data, options);
 
     },
 
@@ -402,7 +420,7 @@ const weatherMap = {
     init(){
 
         this.searchButton.addEventListener("click", async () => {
-          
+          this.countryCode = null;
           this.threeDayForecast = [];
           this.clearCurrentWeather();
           await this.get3dayForecast();
@@ -410,6 +428,10 @@ const weatherMap = {
           this.displayLocationTime();
           this.currentAtmospheric();
           this.forecastAll();
+          //this.get2LetterCountryCode();
+          //this.defaultMap.innerHTML = "";
+          //this.highlightCountry();
+          
     });
 
         // displays user's location on page load with typewriter effect
@@ -436,6 +458,7 @@ const weatherMap = {
         window.addEventListener("load", () => {
             this.drawRegionsMap();
         });
+        
     },
 };
 weatherMap.init();
