@@ -1,7 +1,4 @@
 
-
-import subCodeGenerator from script2;
-
 const weatherMap = {
 
     baseURL  : "http://api.weatherapi.com/v1",
