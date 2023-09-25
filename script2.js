@@ -1,5 +1,5 @@
 
-const secondScript = {
+export default{
 
    subRegionCode : {
 
@@ -28,10 +28,10 @@ const secondScript = {
 
   },
 
-   getSubCode(){
+   getSubCode(countryCode){
 
      for(const code in this.subRegionCode){
-       if(this.subRegionCode[code].includes(weatherMap.countryCode)){
+       if(this.subRegionCode[code].includes(countryCode)){
           return code;
        };
      };

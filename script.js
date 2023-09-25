@@ -1,6 +1,6 @@
 
 
-
+import subCodeGenerator from script2;
 
 const weatherMap = {
 
@@ -365,7 +365,7 @@ const weatherMap = {
         ]);
 
         const options = {
-            region: this.subRegionCode,
+            region: subCodeGenerator.getSubCode(this.countryCode),
             backgroundColor: "rgb(62, 138, 237)",
             datalessRegionColor: "white",
             defaultColor: '#f5f5f5',
@@ -431,6 +431,7 @@ const weatherMap = {
           //this.get2LetterCountryCode();
           //this.defaultMap.innerHTML = "";
           //this.highlightCountry();
+          
           
     });
 
