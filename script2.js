@@ -1,5 +1,7 @@
 
 
+/*
+export function getSubCode(countryCode){
 
    const subRegionCode =  {
 
@@ -28,14 +30,18 @@
 
   };
 
-   getSubCode(countryCode){
+   
 
      for(const code in this.subRegionCode){
        if(this.subRegionCode[code].includes(countryCode)){
           return code;
        };
      };
-    };
+};
+
+*/
+
+
 
 
 

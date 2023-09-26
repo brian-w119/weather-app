@@ -13,7 +13,7 @@ const weatherMap = {
 
     location                   : "",
     userLocationCurrent        : "",
-    countryCode                : "",
+    countryCode                : null,
     currentLocationCoordinates : [],
     coordinates                : [],
     longitude                  : null,
@@ -104,7 +104,7 @@ const weatherMap = {
     
     },
     
-
+   
     detectLocalCondition(){
         return `${this.baseURL}/current.json?key=${this.apiKey}&q=${this.location}&qi=no`;
     },
@@ -249,7 +249,7 @@ const weatherMap = {
     },
 
     forecastday3(){
-        
+
         this.column3.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column3.style.color = "red";
@@ -391,7 +391,7 @@ const weatherMap = {
         ]);
 
         const options = {
-            region: subCodeGenerator.getSubCode(this.countryCode),
+            region: "002",
             backgroundColor: "rgb(62, 138, 237)",
             datalessRegionColor: "white",
             defaultColor: '#f5f5f5',
@@ -441,9 +441,19 @@ const weatherMap = {
         setInterval(this.time, 1000);
     },
 
-   
-    //draw map
-    init(){
+    getSubRegionCode(){
+        for(const code in this.subRegionCode){
+            if(this.subRegionCode[code].includes(this.countryCode)){
+              // console.log(code);
+               alert("ok");
+               return code;
+            };
+          };
+          
+    },
+
+     //draw map
+     init(){
 
         this.searchButton.addEventListener("click", async () => {
           this.countryCode = null;
@@ -454,15 +464,15 @@ const weatherMap = {
           this.displayLocationTime();
           this.currentAtmospheric();
           this.forecastAll();
-          //this.get2LetterCountryCode();
+          this.get2LetterCountryCode();
+          this.getSubRegionCode();
+          //console.log("ok");
           //this.defaultMap.innerHTML = "";
           //this.highlightCountry();
           
           
     });
 
-        // displays user's location on page load with typewriter effect
-        
         window.addEventListener("load", async () => {
 
            this.searchClicked = 0;
