@@ -20,6 +20,8 @@ const weatherMap = {
     latitude                   : null,
     weatherCondition           : [],
     locationName               : [],
+    subRegionCode              : null,
+    country                    : null,
 
     // values for current conditions:
     currentCondition    : null,
@@ -77,7 +79,7 @@ const weatherMap = {
     // changes to a 1 when search is clicked
     searchClicked      : 0,
 
-    subRegionCode : {
+    subRegionObject : {
 
         "015": ["DZ", "EG", "EH", "LY", "MA", "SD", "SS", "TN"],
         "011": ["BF", "BJ", "CI", "CV", "GH", "GM", "GN", "GW", "LR", "ML", "MR", "NE", "NG", "SH", "SL", "SN", "TG"],
@@ -146,13 +148,13 @@ const weatherMap = {
         let finalResult = result.features[0].properties.country_code;
         finalResult = finalResult.toUpperCase();
         this.countryCode = finalResult;
-        console.log('set this.countryCode to final result');
+        this.country = result.features[0].properties.country;
         return finalResult;
 
     },
 
     async get3dayForecast(){
-
+ 
         this.searchClicked      = 1;
         this.location           = null;
         this.avgHumidity        = [];
@@ -386,20 +388,21 @@ const weatherMap = {
 
         let data = google.visualization.arrayToDataTable([
             ['Country'],
-            [this.get2LetterCountryCode],
+            [this.country],
         
         ]);
 
         const options = {
-            region: "002",
+            region: this.subRegionCode,
+            colorAxis: {
+                colors: ['#00853f', 'black', '#e31b23']
+            },
             backgroundColor: "rgb(62, 138, 237)",
             datalessRegionColor: "white",
-            defaultColor: '#f5f5f5',
         };
 
         chart = new google.visualization.GeoChart(document.getElementById("worldMap"));
         chart.draw(data, options);
-
     },
     
     //part of function required to draw map
@@ -416,7 +419,6 @@ const weatherMap = {
         
         chart = new google.visualization.GeoChart(document.getElementById("worldMap"));
         chart.draw(data, options);
-
     },
 
     time(){
@@ -442,19 +444,18 @@ const weatherMap = {
     },
 
     getSubRegionCode(){
-        console.log('Calling getSubRegionCode()');
-        for(const code in this.subRegionCode){
-            if(this.subRegionCode[code].includes(this.countryCode)){
-              // console.log(code);
-               alert("ok");
+        //console.log('Calling getSubRegionCode()');
+        for(const code in this.subRegionObject){
+            if(this.subRegionObject[code].includes(this.countryCode)){
+                this.subRegionCode = code;
+               console.log(this.subRegionCode);
                return code;
             };
           };
-          
     },
 
      //draw map
-     init(){
+    init(){
 
         this.searchButton.addEventListener("click", async () => {
           this.countryCode = null;
@@ -465,14 +466,12 @@ const weatherMap = {
           this.displayLocationTime();
           this.currentAtmospheric();
           this.forecastAll();
-          this.get2LetterCountryCode();
+          await this.get2LetterCountryCode();
           this.getSubRegionCode();
           //console.log("ok");
           //this.defaultMap.innerHTML = "";
-          //this.highlightCountry();
-          
-          
-    });
+          this.highlightCountry();
+        });
 
         window.addEventListener("load", async () => {
 
@@ -485,7 +484,6 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
-
         }),
         
 
