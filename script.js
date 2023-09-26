@@ -146,7 +146,7 @@ const weatherMap = {
         let finalResult = result.features[0].properties.country_code;
         finalResult = finalResult.toUpperCase();
         this.countryCode = finalResult;
-        console.log(this.countryCode);
+        console.log('set this.countryCode to final result');
         return finalResult;
 
     },
@@ -442,6 +442,7 @@ const weatherMap = {
     },
 
     getSubRegionCode(){
+        console.log('Calling getSubRegionCode()');
         for(const code in this.subRegionCode){
             if(this.subRegionCode[code].includes(this.countryCode)){
               // console.log(code);
