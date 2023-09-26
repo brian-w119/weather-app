@@ -143,12 +143,12 @@ const weatherMap = {
 
     async get2LetterCountryCode(){
 
-        const response = await fetch(this.get2LetterCode());
-        const result = await response.json();
-        let finalResult = result.features[0].properties.country_code;
-        finalResult = finalResult.toUpperCase();
+        const response   = await fetch(this.get2LetterCode());
+        const result     = await response.json();
+        let finalResult  = result.features[0].properties.country_code;
+        finalResult      = finalResult.toUpperCase();
         this.countryCode = finalResult;
-        this.country = result.features[0].properties.country;
+        this.country     = result.features[0].properties.country;
         return finalResult;
 
     },
@@ -174,10 +174,10 @@ const weatherMap = {
         this.forecastVis        = [];
         this.locationName       = null;
         
-        this.location = this.searchbar.value;
+        this.location     = this.searchbar.value;
 
-        const response = await fetch(this.weatherForecast(this.location));
-        const result = await response.json();
+        const response    = await fetch(this.weatherForecast(this.location));
+        const result      = await response.json();
         this.locationName = result.location.name;
 
         this.coordinates.push(result.location.lon, result.location.lat);
@@ -186,7 +186,7 @@ const weatherMap = {
         //push respective values to their arrays
         for(let count = 0; count < 3; count++){
 
-            const resultPath = result.forecast.forecastday[count];
+            const resultPath  = result.forecast.forecastday[count];
             const resultPath2 = result.forecast.forecastday[count].day;
 
             const sunUp = `Sunrise: ${resultPath.astro.sunrise}`;
@@ -393,12 +393,12 @@ const weatherMap = {
         ]);
 
         const options = {
-            region: this.subRegionCode,
-            colorAxis: {
-                colors: ['#00853f', 'black', '#e31b23']
-            },
-            backgroundColor: "rgb(62, 138, 237)",
-            datalessRegionColor: "white",
+            region             : this.subRegionCode,
+            colorAxis          : {
+                                   colors: ['#00853f', 'black', '#e31b23']
+                                 },
+            backgroundColor    : "rgb(62, 138, 237)",
+            datalessRegionColor: "white",   
         };
 
         chart = new google.visualization.GeoChart(document.getElementById("worldMap"));
@@ -454,6 +454,28 @@ const weatherMap = {
           };
     },
 
+    displayAnim(){
+        const image1 = document.createElement("img");
+        const image2 = document.createElement("img");
+        const image3 = document.createElement("img");
+
+        image1.src   = "https://github.com/brian-w119/my-images/blob/main/circleProgress.gif?raw=true";
+        image2.src   = "https://github.com/brian-w119/my-images/blob/main/circleProgress.gif?raw=true";
+        image3.src   = "https://github.com/brian-w119/my-images/blob/main/circleProgress.gif?raw=true";
+
+        this.column1.appendChild(image1);
+        this.column2.appendChild(image2);
+        this.column3.appendChild(image3);
+
+        image1.style.position = "relative";
+        image2.style.position = "relative";
+        image3.style.position = "relative";
+
+        image1.style.top = "30%";
+        image2.style.top = "30%";
+        image3.style.top = "30%";
+    },
+
      //draw map
     init(){
 
@@ -484,6 +506,8 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
+           //await this.get3dayForecast();
+           this.displayAnim();
         }),
         
 
