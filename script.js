@@ -171,8 +171,7 @@ const weatherMap = {
         this.forecastCondition  = []; 
         this.forecastVis        = [];
         this.locationName       = null;
-
-
+        
         this.location = this.searchbar.value;
 
         const response = await fetch(this.weatherForecast(this.location));
@@ -232,7 +231,8 @@ const weatherMap = {
     },
 
     forecastday1(){
-        
+
+        this.column1.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column1.style.color = "red";
             this.column1.innerHTML += "<pre>" + "<br>" + this.threeDayForecast[value][0];
@@ -240,7 +240,8 @@ const weatherMap = {
     },
 
     forecastday2(){
-      
+
+        this.column2.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column2.style.color = "red";
             this.column2.innerHTML += "<pre>" + "<br>" + this.threeDayForecast[value][1];
@@ -248,7 +249,8 @@ const weatherMap = {
     },
 
     forecastday3(){
-      
+        
+        this.column3.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column3.style.color = "red";
             this.column3.innerHTML += "<pre>" + "<br>" + this.threeDayForecast[value][2];
@@ -472,7 +474,8 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
-        });
+
+        }),
         
 
         google.charts.load('current', {
@@ -486,4 +489,5 @@ const weatherMap = {
         
     },
 };
+
 weatherMap.init();
