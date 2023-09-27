@@ -1,4 +1,3 @@
-
 const weatherMap = {
 
     baseURL  : "http://api.weatherapi.com/v1",
@@ -22,6 +21,7 @@ const weatherMap = {
     locationName               : [],
     subRegionCode              : null,
     country                    : null,
+    pageLoad                   : false,
 
     // values for current conditions:
     currentCondition    : null,
@@ -133,8 +133,6 @@ const weatherMap = {
 
    //generates location map on page load
     async renderZoomedMap(){
- 
-        //this.coordinates = [];
         await this.getLocation(); 
         //const response = await fetch(this.generateZoomedMap());
         this.image.src = this.generateZoomedMap();
@@ -154,7 +152,7 @@ const weatherMap = {
     },
 
     async get3dayForecast(){
- 
+
         this.searchClicked      = true;
         this.location           = null;
         this.avgHumidity        = [];
@@ -174,7 +172,8 @@ const weatherMap = {
         this.forecastVis        = [];
         this.locationName       = null;
         
-        this.location     = this.searchbar.value;
+        //this.this.location     = this.searchbar.value;
+        this.pageLoad === true ? this.location = this.searchbar.value: this.location = await this.getCurrentLocation();
         const response    = await fetch(this.weatherForecast(this.location));
         const result      = await response.json();
         console.log(result);
@@ -227,13 +226,10 @@ const weatherMap = {
         this.threeDayForecast.push(this.maxTemp);
         this.threeDayForecast.push(this.minTemp);
         this.threeDayForecast.push(this.windSpeedmax);
-         
-        
-        //console.log(result);
+         //console.log(result);
     },
 
     forecastday1(){
-
         this.column1.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column1.style.color = "red";
@@ -242,7 +238,6 @@ const weatherMap = {
     },
 
     forecastday2(){
-
         this.column2.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column2.style.color = "red";
@@ -251,7 +246,6 @@ const weatherMap = {
     },
 
     forecastday3(){
-
         this.column3.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column3.style.color = "red";
@@ -260,14 +254,12 @@ const weatherMap = {
     },
 
     forecastAll(){
-
         this.forecastday1();
         this.forecastday2();
         this.forecastday3();
     },
 
     displayLocationTime(){
-
         this.timeAtLocation    = this.timeAtLocation.slice(10, 17);
         this.intro.innerHTML   = "";
         this.intro.innerHTML   = `See the weather in ${this.location} as at ${this.timeAtLocation} Hours, local time.`;
@@ -277,7 +269,6 @@ const weatherMap = {
 
     //stores coordinates of location in array "coordinates"
     async getLocation(){
-
         this.location    = null;
         this.coordinates = [];
         const response   = await fetch(this.detectLocalCondition());
@@ -290,7 +281,6 @@ const weatherMap = {
 
     //pushes user's current location as lat. and lon., and stores city and country in variable
     async getCurrentLocation(){
-        
         this.location  = "";
         coordinates    = [];
         const response = await fetch(this.detectCurrentLocation());
@@ -307,8 +297,7 @@ const weatherMap = {
     //stores current atmospheric condition and pushes to weatherCondition array
     async currentAtmospheric(){
 
-        this.searchClicked === true ? this.location = this.searchbar.value: "";
-
+        this.searchClicked === true ? this.location = this.searchbar.value: this.location = await this.getCurrentLocation();
         this.temperatureNow     = null;
         this.currentAtmPressure = null;
         this.currentCloudCover  = null;
@@ -350,7 +339,7 @@ const weatherMap = {
         this.weatherCondition.push(uv);
 
         this.displayCurrentWeather();
-        //console.log(result);
+        console.log(result);
     },
     
     displayCurrentWeather(){
@@ -374,7 +363,6 @@ const weatherMap = {
     
     // prints the user's location in typing effect
     typewriterEffect(){
-
        this.intro.innerHTML = this.introduction[0].substring(0, this.textPosition);
        if(this.textPosition++ != this.introduction[0].length){
         setTimeout( ()=> this.typewriterEffect(), this.speed);
@@ -383,7 +371,6 @@ const weatherMap = {
     
     //draws regional map, and highlight country of interest on search
     highlightCountry(){
-
         let data = google.visualization.arrayToDataTable([
             ['Country'],
             [this.country],
@@ -405,7 +392,6 @@ const weatherMap = {
     
     //draws map of the world on page load
     drawRegionsMap(){
-
         let data = google.visualization.arrayToDataTable([
             ['Country'],
         
@@ -420,9 +406,7 @@ const weatherMap = {
     },
 
     time(){
-       
         this.localTime = null; 
-        
         const d   = new Date();
         let hour  = d.getHours();
         let min   = d.getMinutes();
@@ -436,7 +420,6 @@ const weatherMap = {
     },
 
     displayTime(){
-
         this.localTime = null;
         setInterval(this.time, 1000);
     },
@@ -476,7 +459,6 @@ const weatherMap = {
 
      //draw map
     init(){
-
         this.searchButton.addEventListener("click", async () => {
            // this.location     = this.searchbar.value;
           this.countryCode = null;
@@ -495,7 +477,6 @@ const weatherMap = {
         });
 
         window.addEventListener("load", async () => {
-
            this.searchClicked = false;
            this.coordinates = [];
            this.location = "";
@@ -505,7 +486,9 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
-           //await this.get3dayForecast();
+           await this.get3dayForecast();
+           this.pageLoad = true;
+           this.forecastAll();
            //this.displayAnim();
         }),
         
