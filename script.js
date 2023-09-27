@@ -133,8 +133,6 @@ const weatherMap = {
 
    //generates location map on page load
     async renderZoomedMap(){
- 
-        //this.coordinates = [];
         await this.getLocation(); 
         //const response = await fetch(this.generateZoomedMap());
         this.image.src = this.generateZoomedMap();
@@ -142,7 +140,6 @@ const weatherMap = {
 
 
     async get2LetterCountryCode(){
-
         const response   = await fetch(this.get2LetterCode());
         const result     = await response.json();
         let finalResult  = result.features[0].properties.country_code;
@@ -154,7 +151,6 @@ const weatherMap = {
     },
 
     async get3dayForecast(){
- 
         this.searchClicked      = true;
         this.location           = null;
         this.avgHumidity        = [];
@@ -233,7 +229,6 @@ const weatherMap = {
     },
 
     forecastday1(){
-
         this.column1.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column1.style.color = "red";
@@ -242,7 +237,6 @@ const weatherMap = {
     },
 
     forecastday2(){
-
         this.column2.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column2.style.color = "red";
@@ -251,7 +245,6 @@ const weatherMap = {
     },
 
     forecastday3(){
-
         this.column3.innerHTML = "";
         for(let value = 0; value < this.threeDayForecast.length; value++){
             this.column3.style.color = "red";
@@ -412,8 +405,7 @@ const weatherMap = {
     },
 
     time(){
-       this.localTime = null; 
-        
+        this.localTime = null; 
         const d   = new Date();
         let hour  = d.getHours();
         let min   = d.getMinutes();
