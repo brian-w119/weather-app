@@ -53,7 +53,6 @@ const weatherMap = {
     forecastCondition   : [],
     threeDayForecast    : [],
     subRegionCode       : null,
-    pageLoad            : false,
 
     searchbar           : document.querySelector("#searchBar"),
     searchButton        : document.querySelector("#searchButton"),
@@ -176,7 +175,6 @@ const weatherMap = {
         this.locationName       = null;
         
         this.location     = this.searchbar.value;
-
         const response    = await fetch(this.weatherForecast(this.location));
         const result      = await response.json();
         console.log(result);
@@ -480,6 +478,7 @@ const weatherMap = {
     init(){
 
         this.searchButton.addEventListener("click", async () => {
+           // this.location     = this.searchbar.value;
           this.countryCode = null;
           this.threeDayForecast = [];
           this.clearCurrentWeather();
@@ -506,8 +505,7 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
-           await this.get3dayForecast();
-           this.pageLoad = true;
+           //await this.get3dayForecast();
            //this.displayAnim();
         }),
         
