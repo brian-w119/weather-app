@@ -301,9 +301,7 @@ const weatherMap = {
         const finalResult        = `${city}, ${country}`;
         this.userLocationCurrent = finalResult;
         this.location            = finalResult;
-        
         return this.location;
-
     },
 
     //stores current atmospheric condition and pushes to weatherCondition array
@@ -353,7 +351,6 @@ const weatherMap = {
 
         this.displayCurrentWeather();
         //console.log(result);
-
     },
     
     displayCurrentWeather(){
@@ -371,6 +368,7 @@ const weatherMap = {
     async setLocation(){
         this.userLocationCurrent = await this.getCurrentLocation();
         this.location = this.userLocationCurrent;
+        console.log(`Current Location: ${this.userLocationCurrent}`);
     },
 
     
@@ -507,7 +505,7 @@ const weatherMap = {
            this.typewriterEffect();
            this.currentAtmospheric();
            //await this.get3dayForecast();
-           this.displayAnim();
+           //this.displayAnim();
         }),
         
 
