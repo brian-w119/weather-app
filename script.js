@@ -53,6 +53,7 @@ const weatherMap = {
     forecastCondition   : [],
     threeDayForecast    : [],
     subRegionCode       : null,
+    pageLoad            : false,
 
     searchbar           : document.querySelector("#searchBar"),
     searchButton        : document.querySelector("#searchButton"),
@@ -155,7 +156,7 @@ const weatherMap = {
 
     async get3dayForecast(){
  
-        this.searchClicked      = 1;
+        this.searchClicked      = true;
         this.location           = null;
         this.avgHumidity        = [];
         this.avgTemp            = [];  
@@ -178,6 +179,7 @@ const weatherMap = {
 
         const response    = await fetch(this.weatherForecast(this.location));
         const result      = await response.json();
+        console.log(result);
         this.locationName = result.location.name;
 
         this.coordinates.push(result.location.lon, result.location.lat);
@@ -228,7 +230,7 @@ const weatherMap = {
         this.threeDayForecast.push(this.minTemp);
         this.threeDayForecast.push(this.windSpeedmax);
          
-        console.log(this.threeDayForecast);
+        
         //console.log(result);
     },
 
@@ -307,7 +309,7 @@ const weatherMap = {
     //stores current atmospheric condition and pushes to weatherCondition array
     async currentAtmospheric(){
 
-        this.searchClicked === 1 ? this.location = this.searchbar.value: "";
+        this.searchClicked === true ? this.location = this.searchbar.value: "";
 
         this.temperatureNow     = null;
         this.currentAtmPressure = null;
@@ -315,10 +317,10 @@ const weatherMap = {
         this.humidityNow        = null;
         this.tempFeelsLike      = null;
         this.currentCondition   = null;
-        this.uvIndex = null;
+        this.uvIndex            = null;
 
         const response = await fetch(this.detectLocalCondition());
-        const result = await response.json();
+        const result   = await response.json();
 
         this.currentCondition   = result.current.condition.text;
         this.temperatureNow     = result.current.temp_c;
@@ -381,7 +383,7 @@ const weatherMap = {
        };
     },
     
-
+    //draws regional map, and highlight country of interest on search
     highlightCountry(){
 
         let data = google.visualization.arrayToDataTable([
@@ -403,7 +405,7 @@ const weatherMap = {
         chart.draw(data, options);
     },
     
-    //part of function required to draw map
+    //draws map of the world on page load
     drawRegionsMap(){
 
         let data = google.visualization.arrayToDataTable([
@@ -495,7 +497,7 @@ const weatherMap = {
 
         window.addEventListener("load", async () => {
 
-           this.searchClicked = 0;
+           this.searchClicked = false;
            this.coordinates = [];
            this.location = "";
            this.userLocationCurrent = "";
@@ -504,7 +506,8 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
-           //await this.get3dayForecast();
+           await this.get3dayForecast();
+           this.pageLoad = true;
            //this.displayAnim();
         }),
         
