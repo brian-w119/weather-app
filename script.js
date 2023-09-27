@@ -22,6 +22,7 @@ const weatherMap = {
     locationName               : [],
     subRegionCode              : null,
     country                    : null,
+    pageLoad                   : false,
 
     // values for current conditions:
     currentCondition    : null,
@@ -140,6 +141,7 @@ const weatherMap = {
 
 
     async get2LetterCountryCode(){
+
         const response   = await fetch(this.get2LetterCode());
         const result     = await response.json();
         let finalResult  = result.features[0].properties.country_code;
@@ -151,6 +153,7 @@ const weatherMap = {
     },
 
     async get3dayForecast(){
+
         this.searchClicked      = true;
         this.location           = null;
         this.avgHumidity        = [];
@@ -170,7 +173,8 @@ const weatherMap = {
         this.forecastVis        = [];
         this.locationName       = null;
         
-        this.location     = this.searchbar.value;
+        //this.this.location     = this.searchbar.value;
+        this.pageLoad === true ? this.location = this.searchbar.value: this.location = await this.getCurrentLocation();
         const response    = await fetch(this.weatherForecast(this.location));
         const result      = await response.json();
         console.log(result);
@@ -223,9 +227,7 @@ const weatherMap = {
         this.threeDayForecast.push(this.maxTemp);
         this.threeDayForecast.push(this.minTemp);
         this.threeDayForecast.push(this.windSpeedmax);
-         
-        
-        //console.log(result);
+         //console.log(result);
     },
 
     forecastday1(){
@@ -296,7 +298,7 @@ const weatherMap = {
     //stores current atmospheric condition and pushes to weatherCondition array
     async currentAtmospheric(){
 
-        this.searchClicked === true ? this.location = this.searchbar.value: "";
+        this.searchClicked === true ? this.location = this.searchbar.value: this.location = await this.getCurrentLocation();
         this.temperatureNow     = null;
         this.currentAtmPressure = null;
         this.currentCloudCover  = null;
@@ -338,7 +340,7 @@ const weatherMap = {
         this.weatherCondition.push(uv);
 
         this.displayCurrentWeather();
-        //console.log(result);
+        console.log(result);
     },
     
     displayCurrentWeather(){
@@ -485,7 +487,8 @@ const weatherMap = {
            this.introduction = [`Your current location is in or near to ${this.userLocationCurrent}.`],
            this.typewriterEffect();
            this.currentAtmospheric();
-           //await this.get3dayForecast();
+           await this.get3dayForecast();
+           this.pageLoad = true;
            //this.displayAnim();
         }),
         
