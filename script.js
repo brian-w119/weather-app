@@ -176,7 +176,6 @@ const weatherMap = {
         this.pageLoad === true ? this.location = this.searchbar.value: this.location = await this.getCurrentLocation();
         const response    = await fetch(this.weatherForecast(this.location));
         const result      = await response.json();
-        console.log(result);
         this.locationName = result.location.name;
 
         this.coordinates.push(result.location.lon, result.location.lat);
@@ -254,6 +253,7 @@ const weatherMap = {
     },
 
     forecastAll(){
+        console.log('Overwriting content');
         this.forecastday1();
         this.forecastday2();
         this.forecastday3();
@@ -444,13 +444,17 @@ const weatherMap = {
         image2.src   = "https://github.com/brian-w119/my-images/blob/main/circleProgress.gif?raw=true";
         image3.src   = "https://github.com/brian-w119/my-images/blob/main/circleProgress.gif?raw=true";
 
+        this.column1.innerHTML = "";
+        this.column2.innerHTML = "";
+        this.column3.innerHTML = "";
+
         this.column1.appendChild(image1);
         this.column2.appendChild(image2);
         this.column3.appendChild(image3);
 
-        image1.style.position = "relative";
-        image2.style.position = "relative";
-        image3.style.position = "relative";
+        image1.style.position = "absolute";
+        image2.style.position = "absolute";
+        image3.style.position = "absolute";
 
         image1.style.top = "30%";
         image2.style.top = "30%";
@@ -469,7 +473,7 @@ const weatherMap = {
           this.displayLocationTime();
           this.currentAtmospheric();
           this.displayAnim();
-          setTimeout(this.forecastAll, 2000);
+          setTimeout(() => this.forecastAll(), 2000);
           await this.get2LetterCountryCode();
           this.getSubRegionCode();
           //console.log("ok");
