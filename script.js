@@ -38,8 +38,6 @@ const weatherMap = {
     defaultMap          : document.querySelector("#worldMap"),
 
     introduction        : null,
-    speed               : 50,
-    textPosition        : 0,
     localTime           : null,
     timeAtLocation      : null,
 
@@ -299,10 +297,12 @@ const weatherMap = {
     
     // prints the user's location in typing effect
     typewriterEffect(){
-       this.intro.innerHTML = this.introduction[0].substring(0, this.textPosition);
-       if(this.textPosition++ != this.introduction[0].length){
-        setTimeout( ()=> this.typewriterEffect(), this.speed);
-       };
+        const speed = 50;
+        let textPosition = 0;
+        this.intro.innerHTML = this.introduction[0].substring(0, textPosition);
+        if (textPosition++ != this.introduction[0].length){
+            setTimeout(() => this.typewriterEffect(), speed);
+        };
     },
     
     //draws regional map, and highlight country of interest on search
