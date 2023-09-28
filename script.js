@@ -37,6 +37,7 @@ const weatherMap = {
     columnHeading       : document.querySelector("#colHeading"),
     defaultMap          : document.querySelector("#worldMap"),
 
+    textPosition        : 0,
     introduction        : null,
     localTime           : null,
     timeAtLocation      : null,
@@ -298,9 +299,8 @@ const weatherMap = {
     // prints the user's location in typing effect
     typewriterEffect(){
         const speed = 50;
-        let textPosition = 0;
-        this.intro.innerHTML = this.introduction[0].substring(0, textPosition);
-        if (textPosition++ != this.introduction[0].length){
+        this.intro.innerHTML = this.introduction[0].substring(0, this.textPosition);
+        if (this.textPosition++ != this.introduction[0].length){
             setTimeout(() => this.typewriterEffect(), speed);
         };
     },
