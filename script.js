@@ -1,4 +1,3 @@
-
 const weatherMap = {
 
     baseURL  : "http://api.weatherapi.com/v1",
@@ -489,6 +488,10 @@ const weatherMap = {
            this.currentAtmospheric();
            await this.get3dayForecast();
            this.pageLoad = true;
+<<<<<<< HEAD
+=======
+           this.forecastAll();
+>>>>>>> furtherFeatures
            //this.displayAnim();
         }),
         

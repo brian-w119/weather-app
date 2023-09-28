@@ -97,11 +97,11 @@ body{
 
 .forecast{
     width: 840px;
-    height: 400px;
+    height: 430px;
     border: 1px solid black;
     position: absolute;
     right: 10px;
-    bottom: 20px;
+    bottom: 4px;
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 10px;
@@ -110,7 +110,11 @@ body{
 .forecast > *{
     text-align: center;
     background-color: white;
-    overflow: scroll;
+    overflow: hidden;
+}
+
+.forecast > #heading1, #heading2, #heading3{
+   font-weight: bold;
 }
 
 
