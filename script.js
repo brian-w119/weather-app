@@ -468,7 +468,8 @@ const weatherMap = {
           this.image.src = this.generateZoomedMap();
           this.displayLocationTime();
           this.currentAtmospheric();
-          this.forecastAll();
+          this.displayAnim();
+          setTimeout(this.forecastAll, 2000);
           await this.get2LetterCountryCode();
           this.getSubRegionCode();
           //console.log("ok");
@@ -489,7 +490,7 @@ const weatherMap = {
            await this.get3dayForecast();
            this.pageLoad = true;
            this.forecastAll();
-           //this.displayAnim();
+           
         }),
         
 
