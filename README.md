@@ -1,3 +1,3 @@
 # weather-app
 
-## Hello, this is a heading in the README.md
+#This project's aim was to further my practise with using APIs. 
